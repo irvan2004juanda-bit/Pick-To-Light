@@ -1,0 +1,107 @@
+# Pick-to-Light System V2
+
+Sistem Pick-to-Light berbasis komunikasi nirkabel MQTT dan ESP32 untuk 
+optimasi pengambilan barang di gudang. Merupakan implementasi tugas akhir 
+S1 Teknik Elektro, Universitas Telkom.
+
+## Deskripsi
+
+Sistem ini merupakan pengembangan sistem Pick-to-Light versi kedua (V2) 
+yang menggantikan sistem sebelumnya berbasis Google Sheets. Terdiri dari 
+8 modul PTL yang dikendalikan oleh 2 unit ESP32, berkomunikasi melalui 
+MQTT broker lokal (Mosquitto), dengan backend Flask REST API dan database 
+MySQL. Dashboard web memungkinkan input order manual dan monitoring 
+real-time. Sistem dirancang tanpa ketergantungan koneksi internet.
+
+## Fitur Utama
+
+- Komunikasi nirkabel MQTT dengan delay rata-rata 50 ms
+- 8 modul PTL dilengkapi OLED, LED dua warna, tombol konfirmasi, dan relay
+- Dashboard web dengan aktivasi order melalui QR Code atau tombol manual
+- Mode offline (tidak bergantung koneksi internet)
+- Handling concurrent order menggunakan FreeRTOS dan mutex semaphore
+
+## Hardware yang Digunakan
+
+| Komponen | Jumlah | Fungsi |
+|---|---|---|
+| ESP32 WROOM-32 | 2 | Kontroler utama (ESP1 rak A-B, ESP2 rak C-D) |
+| OLED SSD1306 0.96 inch | 8 | Display informasi order |
+| LED dua warna 10mm | 8 | Indikator status (merah/hijau) |
+| Push button 16mm | 8 | Konfirmasi pengambilan |
+| Relay module | 8 | Kontrol perangkat tambahan |
+| TCA9548A | 2 | I2C multiplexer untuk OLED |
+
+## Struktur Repository
+
+- `firmware/` — Kode ESP32 (ESP1 dan ESP2)
+- `backend/` — Flask REST API
+- `dashboard/` — Web interface
+- `database/` — Schema MySQL dan data eksperimen
+
+## Cara Menjalankan
+
+### 1. Setup Database MySQL
+
+Import schema dan data ke phpMyAdmin:
+
+    mysql -u root -p < database/ptl_db.sql
+
+### 2. Jalankan Backend Flask
+
+    cd backend
+    pip install flask flask-cors mysql-connector-python paho-mqtt
+    python server.py
+
+Server akan berjalan di http://localhost:5000
+
+### 3. Upload Firmware ESP32
+
+- Buka file firmware di Arduino IDE
+- Edit variabel konfigurasi di bagian atas kode (WIFI_SSID, WIFI_PASSWORD, SERVER_IP, MQTT_BROKER)
+- Upload ke masing-masing ESP32
+
+### 4. Buka Dashboard
+
+Buka file `dashboard/index.html` di browser modern.
+
+## Hasil Penelitian
+
+Sistem telah diuji dan dibandingkan dengan sistem versi sebelumnya (V1) 
+berbasis Google Sheets. Ringkasan hasil:
+
+| Metrik | MQTT Lokal (V2) | Google Sheets (V1) | Perbandingan |
+|---|---|---|---|
+| Delay rata-rata | 50,725 ms | 4.827,5 ms | 95,18x lebih cepat |
+| Throughput | 15.202 bps | 1.600 bps | 9,50x lebih tinggi |
+| Ukuran payload | 92,76 byte | 955 byte | 9,06x lebih efisien |
+| Akurasi picking | 100% | 100% | Setara |
+| Mode offline | Berhasil | Gagal | Keunggulan V2 |
+
+Detail lengkap analisis tersedia pada dokumen tugas akhir.
+
+## Konfigurasi Keamanan
+
+Seluruh kredensial (WiFi, MQTT, database) tidak di-hardcode dalam 
+repository. File firmware menggunakan placeholder yang harus diganti 
+sesuai konfigurasi jaringan lokal masing-masing pengguna.
+
+## Lisensi
+
+Repository ini menggunakan MIT License. Kode dapat digunakan, 
+dimodifikasi, dan didistribusikan secara bebas dengan mencantumkan 
+atribusi kepada penulis asli.
+
+## Author
+
+**Irvan Maulana Juanda**  
+NIM: 1102223174  
+S1 Teknik Elektro — Fakultas Teknik Elektro  
+Universitas Telkom, Bandung
+
+## Tugas Akhir
+
+**Judul**: Rancang Bangun Sistem Pick-to-Light Berbasis Komunikasi 
+Nirkabel untuk Optimasi Pengambilan Barang di Gudang
+
+**Tahun**: 2026
