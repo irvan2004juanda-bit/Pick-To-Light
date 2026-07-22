@@ -16,11 +16,11 @@
 #include <Adafruit_GFX.h>
 #include <Adafruit_SSD1306.h>
 
-const char* WIFI_SSID     = "TP-Link_EBC6";
-const char* WIFI_PASSWORD = "33460314";
-const char* SERVER_IP     = "192.168.0.105";
+const char* WIFI_SSID     = "YOUR_WIFI_SSID";
+const char* WIFI_PASSWORD = "YOUR_PASSWORD";
+const char* SERVER_IP     = "YOUR_MQTT_BROKER_IP";
 const int   SERVER_PORT   = 5000;
-const char* MQTT_BROKER   = "192.168.0.105";
+const char* MQTT_BROKER   = "YOUR_MQTT_BROKER_IP";
 const int   MQTT_PORT     = 1883;
 String API_BASE = String("http://") + SERVER_IP + ":" + SERVER_PORT;
 
